@@ -3,7 +3,7 @@
 drives=''
 
 scan_drives() {
-    scannedDrives=$(find -E /dev -regex '(/dev/ada[0-9]+|/dev/da[0-9]+|/dev/vtbd[0-9]+|/dev/nvd[0-9]+)')
+    scannedDrives=$(find -E /dev -regex '(/dev/ada[0-9]+|/dev/da[0-9]+|dev/vtblk[0-9]+|/dev/vtbd[0-9]+|/dev/nvd[0-9]+)')
 
 	while(true); do
 		drives=''
