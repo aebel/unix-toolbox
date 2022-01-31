@@ -34,6 +34,9 @@ partition_drive() {
 	log_exec "gpart destroy -F ${drive}"
 	log_exec "gpart create -s gpt ${drive}"
 
+    log_exec "gpart add -s 512k -t freebsd-boot -a 8k ${drive}"
+    log_exec "gpart add -t freebsd-zfs -l ${label} -a 8k ${drive}"
+
 	if [ "${ashift}" = '12' ]; then
 		if [ "${bootType}" = 'legacy' ]; then
 			log_exec "gpart add -s 512k -t freebsd-boot -a 4k ${drive}"
