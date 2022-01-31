@@ -2,6 +2,12 @@
 
 drives=''
 
+log_exec() {
+	cmd=$1
+	echo "--> ${cmd}"
+	eval "${cmd}"
+}
+
 scan_drives() {
     scannedDrives=$(find -E /dev -regex '(/dev/ada[0-9]+|/dev/da[0-9]+|dev/vtblk[0-9]+|/dev/vtbd[0-9]+|/dev/nvd[0-9]+)')
 
