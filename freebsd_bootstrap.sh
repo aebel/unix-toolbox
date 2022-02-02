@@ -168,12 +168,12 @@ log_exec "mkdir -p ${distDir}"
 
 header 'Fetch Distfiles'
 
-#for package in ${packages}; do
-#	log_exec "( cd ${distDir}; fetch ${ftpUrl}/${package} )"
-#done
+for package in ${packages}; do
+	log_exec "( cd ${distDir}; fetch ${ftpUrl}/${package} )"
+done
 
 header 'Extract files'
-#log_exec "( cd ${distDir} ; for file in ${packages} ; do cat \${file} | tar --unlink -xpJf - -C ${altroot} ; done )"
+log_exec "( cd ${distDir} ; for file in ${packages} ; do cat \${file} | tar --unlink -xpJf - -C ${altroot} ; done )"
 
 echo "Enter hostname FQDN"
 read HOSTNAME
