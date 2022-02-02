@@ -1,4 +1,4 @@
-g#/bin/sh
+#/bin/sh
 ftpUrl='ftp://ftp.de.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE'
 distDir='/tmp/zroot/var/tmp/freebsd-dist'
 packages='base.txz kernel.txz'
