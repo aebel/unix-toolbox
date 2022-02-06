@@ -240,8 +240,8 @@ log_exec "fetch https://github.com/$USERNAME.keys --no-verify-peer -o - >> ${alt
 log_exec "chroot -u root -g wheel ${altroot} chown -R 1001:1001 /home/$USERNAME/.ssh"
 
 header "Inital Puppet Setup"
-log_exec "chroot -u root -g wheel ${altroot} puppet config set server 'puppet.ebel.systems' --section main"
 log_exec "chroot -u root -g wheel ${altroot} sysrc 'puppet_enable=\"YES\"'"
+log_exec "chroot -u root -g wheel ${altroot} puppet config set server 'puppet.ebel.systems' --section main"
 
 header 'Done.'
 
