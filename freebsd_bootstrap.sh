@@ -11,7 +11,7 @@ altroot="/tmp/${pool}"
 
 netif='vtnet0'
 
-ip=`ifconfig -f inet:cidr ${netif} | grep inet | cut -w -f3`
+ip=`ifconfig -f inet:cidr ${netif} inet | grep inet | cut -w -f3`
 gateway=`netstat -nr | grep default | cut -w -f2`
 
 log_exec() {
