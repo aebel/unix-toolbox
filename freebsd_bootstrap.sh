@@ -259,6 +259,7 @@ Q7Q2aPO17RUN8/DtJv12itc8hTNMpLf53x4Ksu59VmXCVpMURkZMaU+Ty+0uySZb
 5gD6d7Na/G0fKA==
 -----END CERTIFICATE-----
 SSLEBELSYSTEMS
+
 log_exec "chroot -u root -g wheel ${altroot} ln -s /etc/ssl/certs/ebel-systems-ssl.pem /etc/ssl/certs/5fe57e1a.0"
 
 cat > ${altroot}/usr/local/etc/ssl/certs/poudriere.cert << POUDRIERECERT
