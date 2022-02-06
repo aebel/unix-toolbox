@@ -1,4 +1,5 @@
 #/bin/sh
+# scp aebel@192.168.5.20:/home/aebel/code/unix-toolbox/freebsd_bootstrap.sh .
 ftpUrl='ftp://ftp.de.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE'
 distDir='/tmp/zroot/var/tmp/freebsd-dist'
 packages='base.txz kernel.txz'
@@ -49,7 +50,7 @@ scan_drives() {
 
 partition_drive() {
 	drive=$1
-	label=$2
+	number=$2
 
 	header "Partition ${drive}"
 
@@ -59,13 +60,13 @@ partition_drive() {
 	log_exec "gpart create -s gpt ${drive}"
 
     # Create Boot Partion
-    log_exec "gpart add -s 512k -t freebsd-boot -a 8k ${drive}"
+    log_exec "gpart add -s 512k -t freebsd-boot -a 1m ${drive}"
 
     # Create Swap Partion
-    log_exec "gpart add -s 8G -t freebsd-swap -l ${label} -a 8k ${drive}"
+    log_exec "gpart add -s 8G -t freebsd-swap -l swap${number} -a 1m ${drive}"
 
     # Create Main Partion
-    log_exec "gpart add -t freebsd-zfs -l ${label} -a 8k ${drive}"
+    log_exec "gpart add -t freebsd-zfs -l disk${number} -a 1m ${drive}"
 
     # Write Bootcode
     log_exec "gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ${drive}"
@@ -109,8 +110,8 @@ done
 #
 i=0
 for drive in ${drives}; do
-	label="disk${i}"
-	partition_drive $drive $label
+    label="disk${i}"
+	partition_drive $drive $i
 
 	labels=$(echo "${labels} ${label}" | xargs)
 
@@ -136,7 +137,7 @@ log_exec "zpool create -o altroot=${altroot} -O compress=zstd -O atime=off -m no
 
 header 'Create filesystems'
 log_exec "zfs create -o mountpoint=none ${pool}/ROOT"
-log_exec "zfs create -o mountpoint=/ -o canmount=noauto ${pool}/ROOT/default"
+log_exec "zfs create -o mountpoint=/ ${pool}/ROOT/default"
 log_exec "zfs create -o mountpoint=/tmp -o exec=on -o setuid=off ${pool}/tmp"
 log_exec "zfs create -o mountpoint=/usr -o canmount=off ${pool}/usr"
 log_exec "zfs create ${pool}/usr/home"
@@ -155,6 +156,7 @@ log_exec "zfs set canmount=noauto ${pool}/ROOT/default"
 
 header 'Set bootfs'
 log_exec "zpool set bootfs=${pool}/ROOT/default ${pool}"
+#log_exec "zpool set cachefile=/var/tmp/zpool.cache tank"
 
 header 'Sync zpool.cache'
 log_exec "mkdir -p ${altroot}/boot/zfs ; zpool set cachefile=${altroot}/boot/zfs/zpool.cache ${pool}"
@@ -167,7 +169,6 @@ header 'Create distDir'
 log_exec "mkdir -p ${distDir}"
 
 header 'Fetch Distfiles'
-
 for package in ${packages}; do
 	log_exec "( cd ${distDir}; fetch ${ftpUrl}/${package} )"
 done
@@ -187,6 +188,8 @@ hostname="$HOSTNAME"
 zfs_enable="YES"
 # Network
 ifconfig_${netif}="inet ${ip}"
+ifconfig_${netif}="inet6 accept_rtadv"
+rtsold_enable="YES"
 defaultrouter="${gateway}"
 # Services
 sendmail_enable="NONE"
@@ -196,13 +199,14 @@ RCCONF
 header 'Create /etc/fstab'
 cat > ${altroot}/etc/fstab << FSTAB
 # Device                       Mountpoint              FStype  Options         Dump    Pass#
-/dev/gpt/swap0                 none                    swap    sw              0       0
-/dev/gpt/swap1                 none                    swap    sw              0       0
+#/dev/gpt/swap0                 none                    swap    sw              0       0
+#/dev/gpt/swap1                 none                    swap    sw              0       0
 FSTAB
 
 header 'Create /boot/loader.conf'
 cat >> ${altroot}/boot/loader.conf << LOADER
-opensolaris_load="YES"
+kern.geom.label.disk_ident.enable="0"
+kern.geom.label.gptid.enable="0"
 zfs_load="YES"
 vfs.zfs.arc_max="8G"
 LOADER
@@ -234,6 +238,10 @@ log_exec "chroot -u root -g wheel ${altroot} mkdir -p /home/$USERNAME/.ssh/"
 header "Fetch pub keys from Github"
 log_exec "fetch https://github.com/$USERNAME.keys --no-verify-peer -o - >> ${altroot}/home/$USERNAME/.ssh/authorized_keys"
 log_exec "chroot -u root -g wheel ${altroot} chown -R 1001:1001 /home/$USERNAME/.ssh"
+
+header "Inital Puppet Setup"
+log_exec "chroot -u root -g wheel ${altroot} puppet config set server 'puppet.ebel-syste.ms' --section main"
+log_exec "chroot -u root -g wheel ${altroot} sysrc 'puppet_enable="YES"'"
 
 header 'Done.'
 
