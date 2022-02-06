@@ -188,7 +188,7 @@ hostname="$HOSTNAME"
 zfs_enable="YES"
 # Network
 ifconfig_${netif}="inet ${ip}"
-ifconfig_${netif}="inet6 accept_rtadv"
+ifconfig_${netif}_ipv6="inet6 accept_rtadv"
 rtsold_enable="YES"
 defaultrouter="${gateway}"
 # Services
