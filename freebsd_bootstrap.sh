@@ -222,6 +222,48 @@ nameserver 8.8.8.8
 nameserver 9.9.9.9
 RESOLV
 
+header 'Create Package Repo'
+log_exec "chroot -u root -g wheel ${altroot} mkdir -p /usr/local/etc/pkg/repos"
+log_exec "chroot -u root -g wheel ${altroot} mkdir -p /usr/local/etc/ssl/certs"
+
+cat > ${altroot}/usr/local/etc/ssl/certs/poudriere.cert << POUDRIERECERT
+-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0ss3Nc7EVhgcQE4dqRtt
+W653SForY1ZtdlLe78UkflsRoeZEqB968iZYSQFWuEg6YiEiMbAshOHKpe+X/C85
+uESfBW/WyWEqhWcEeFe0rnamZOPTjPppXKIEPyZZDPHLDBkMqt8R67TWsCL4bCeF
+5zYRniw0s60lq62SD9MfRvc5NxiBd+LB4MLl/5KzfQf50vEP/5swl/DYrawCXbko
+xz88f5TdmEEmWyMeiOgPMR0gy+xIN6pWeSLCfX3UR4Q7UCpPCTYxUQQvBhJ7LWAu
+QPY95LV6dyiXCHnvAomHaktQ5ukPjcYw90bc3BkTcivKZs/DKiL9YjKQbISZtziO
+OvOyriQU/1DBRCQA32kx0VS3DCv/NmUjtUZFaye4aB2MIYJYQxzpFVA2HIUL1+Ax
+u7Wf/z+eF7TLfqknmM7AlEt9BYAEMgCQYHQ8GuSjzmqt7QCcgDw4IPxACB3ssgsn
+gkQssxNaBOtkp5mxE3RL3vsMjcSZ3EubFvsn8Wya9OTIgAOo54/pJcRxPfLSy+wY
+g5DkLrNZRxGKAEcTA5gFiKr/EGhRuQ7aZgrCeaP+zr3JMyKCFGIBGJnlJ0DpOiP6
+LSqpijNy85XGwyKezRg+M9tOFKUgg2rMO1BupnNTPCZZZuvlxGf7SIbcvOZLXklK
+5MHtmaiNWLwXere1jfeODV8CAwEAAQ==
+-----END PUBLIC KEY-----
+POUDRIERECERT
+
+cat > ${altroot}/usr/local/etc/pkg/FreeBSD.conf << REPOFREEBSD
+FreeBSD: {
+        enabled: no
+}
+REPOFREEBSD
+
+cat > ${altroot}/usr/local/etc/pkg/FreeBSD.conf << REPOFREEBSD
+FreeBSD: {
+        enabled: no
+}
+REPOFREEBSD
+
+cat > ${altroot}/usr/local/etc/pkg/custom.conf << REPOCUSTOM
+custom: {
+        url: "https://packages.ebel.systems/packages/130amd64-default-server",
+        signature_type: "pubkey",
+        pubkey: "/usr/local/etc/ssl/certs/poudriere.cert",
+        enabled: yes,
+}
+REPOCUSTOM
+
 header "Mount devfs on ${altroot}/dev"
 log_exec "mount -t devfs devfs ${altroot}/dev"
 
