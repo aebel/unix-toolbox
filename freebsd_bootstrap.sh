@@ -263,7 +263,7 @@ EBELSYSTEMSCA
 log_exec "chroot -u root -g wheel ${altroot} ln -s /etc/ssl/certs/ebel-systems-ca.pem /etc/ssl/certs/7317cef0.0"
 
 cat > ${altroot}/etc/ssl/certs/ebel-systems-ssl.pem << SSLEBELSYSTEMS
-----BEGIN CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
 MIIFRjCCAy6gAwIBAgIIR63CibwotV4wDQYJKoZIhvcNAQENBQAwWDELMAkGA1UE
 BhMCREUxFTATBgNVBAoTDEViZWwtU3lzdGVtczEYMBYGA1UECxMPRWJlbC1TeXN0
 ZW1zIENBMRgwFgYDVQQDEw9FYmVsLVN5c3RlbXMgQ0EwIBcNMjEwNjIzMTEyMDAw
