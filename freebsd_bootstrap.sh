@@ -226,6 +226,41 @@ header 'Create Package Repo'
 log_exec "chroot -u root -g wheel ${altroot} mkdir -p /usr/local/etc/pkg/repos"
 log_exec "chroot -u root -g wheel ${altroot} mkdir -p /usr/local/etc/ssl/certs"
 
+cat > ${altroot}/etc/ssl/certs/ebel-systems-ssl.pem << SSLEBELSYSTEMS
+----BEGIN CERTIFICATE-----
+MIIFRjCCAy6gAwIBAgIIR63CibwotV4wDQYJKoZIhvcNAQENBQAwWDELMAkGA1UE
+BhMCREUxFTATBgNVBAoTDEViZWwtU3lzdGVtczEYMBYGA1UECxMPRWJlbC1TeXN0
+ZW1zIENBMRgwFgYDVQQDEw9FYmVsLVN5c3RlbXMgQ0EwIBcNMjEwNjIzMTEyMDAw
+WhgPMjA4MjA2MjQwMDAwMDBaMFoxCzAJBgNVBAYTAkRFMRUwEwYDVQQKEwxFYmVs
+LVN5c3RlbXMxGTAXBgNVBAsTEEViZWwtU3lzdGVtcyBTU0wxGTAXBgNVBAMTEEVi
+ZWwtU3lzdGVtcyBTU0wwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDq
+xbqw9XvKc9+evnABWnQh44gZl9lcBAao/aC9/lwmLdBg78a45V0OnQ7NRRX63AXN
+n93YUNnmjiK8/g6u9B2S6FHITMaP2pcwge164RAHycshIKovOt0OKUo9UrWKJp7h
+TsWSd3Ohy9xuoy0tsBld+oUU/Yz2YRZDABeFzzfp5SX5sKaBgz4Unatt1AbSRL09
+8vRUTKH6ZQcOXhjmwPjekn9J9OPaiQh0hVQvtsjRIfpJRtnoac4/Jh0Xd1Qa3bJD
+Tz8nPrLHcYJQTBMgCTQQK8oj4pAxbYjPIWikuWldIj20pmxhuAHIwlbIPTS/dJ8K
+c03DYK/mKKrBfPHTnen16VekgqO1488OaYVSGAC/xbsY4k2FR+1PLdcloF3IR+lx
+d9eQetOQKzvi6A0V3BTp4br8KsC8+heGlWEOkayPoZ1+zpi6RhhnlfG3nFb5wjgS
+9RbdCBHcNOb/yi7DsRlWdzDX16VmrRrMm9bi9Lrn3BTm/oK3EuwElHdLb9OqpDea
+Po1NxPAifXOIT34EFj8b9JpcrnKf02I+6dhmYJVTaskw6pFG9tqWJ15KJCJsu0ky
+V3DAUthMRTSHZZDgq8aaH4ZkKsMFUMIrf+B4uT0snY4yfUmEWEo6kQaGLv8k+CZT
+GZ2ce+yaXY66RpUQCRMQkXzdjGyz8tZs5z7yN2vZqwIDAQABoxAwDjAMBgNVHRME
+BTADAQH/MA0GCSqGSIb3DQEBDQUAA4ICAQAJdh22yz4Yje5hABXyqkoex1pyCSsD
+QHd+lLT4t0kI6dBcZHMY8AIKH6HviVKzn+wSVlI4Ve0AhShk0Y8r4BZCBnA6BSYn
+lGXn3x1J3TOPSODFej3v4wUvga3XhLrrRacxtkUn8pgHJ4fnndHWj/PNJIvhiaLV
+a2/WSKZ2221GPpe1ieNb8RL2x2Eb6YdNh9qhanAzYWbt+CfLgeQu1doduaWhOVNM
+W2n948oSSfBsUlOLqIiCgalU9+YtegHPv3kgnUZvjP2FUAPO2yy32xiktvG1Mlql
+sxUgn4BMyFdKoy3xrAu96FJwv3KGOdkch65dstxF8L99Wh3NKFYe9QVXFJx/dheI
+jFC+hUtfbjwnCeP7cHCI7jVr7rl39YRDL+UKWHmUtQM6u007yPrGhq0lrED0wiQf
+HAn/QlRL6iYDqmfwXtQ40LmJwhvJ6DCEDMloATvU5b18yZNjpyXRNOE249bWPNNY
+u5uVvvG9qNMOmwwCnczr8Oq0aQd4Up3Ej0rMqjpOaEG0XULwjJjGLuwZSF51e7Nr
+Q7Q2aPO17RUN8/DtJv12itc8hTNMpLf53x4Ksu59VmXCVpMURkZMaU+Ty+0uySZb
+3UpVTsEgQH2E8O/H6NX1HaZKTSbvW5JFrpCqEL7sbyIW+dCWXRg5nMxNA3FLLiIS
+5gD6d7Na/G0fKA==
+-----END CERTIFICATE-----
+SSLEBELSYSTEMS
+log_exec "chroot -u root -g wheel ${altroot} ln -s /etc/ssl/certs/ebel-systems-ssl.pem /etc/ssl/certs/5fe57e1a.0"
+
 cat > ${altroot}/usr/local/etc/ssl/certs/poudriere.cert << POUDRIERECERT
 -----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0ss3Nc7EVhgcQE4dqRtt
@@ -243,19 +278,13 @@ LSqpijNy85XGwyKezRg+M9tOFKUgg2rMO1BupnNTPCZZZuvlxGf7SIbcvOZLXklK
 -----END PUBLIC KEY-----
 POUDRIERECERT
 
-cat > ${altroot}/usr/local/etc/pkg/FreeBSD.conf << REPOFREEBSD
+cat > ${altroot}/usr/local/etc/pkg/repos/FreeBSD.conf << REPOFREEBSD
 FreeBSD: {
         enabled: no
 }
 REPOFREEBSD
 
-cat > ${altroot}/usr/local/etc/pkg/FreeBSD.conf << REPOFREEBSD
-FreeBSD: {
-        enabled: no
-}
-REPOFREEBSD
-
-cat > ${altroot}/usr/local/etc/pkg/custom.conf << REPOCUSTOM
+cat > ${altroot}/usr/local/etc/pkg/repos/custom.conf << REPOCUSTOM
 custom: {
         url: "https://packages.ebel.systems/packages/130amd64-default-server",
         signature_type: "pubkey",
