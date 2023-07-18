@@ -1,6 +1,6 @@
 #/bin/sh
 # scp aebel@192.168.5.20:/home/aebel/code/unix-toolbox/freebsd_bootstrap.sh .
-ftpUrl='ftp://ftp.de.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE'
+ftpUrl='ftp://ftp.de.freebsd.org/pub/FreeBSD/releases/amd64/13.2-RELEASE'
 distDir='/tmp/zroot/var/tmp/freebsd-dist'
 packages='base.txz kernel.txz'
 
@@ -323,7 +323,7 @@ REPOFREEBSD
 
 cat > ${altroot}/usr/local/etc/pkg/repos/custom.conf << REPOCUSTOM
 custom: {
-        url: "https://packages.ebel.systems/packages/130amd64-default-server",
+        url: "https://packages.ebel.systems/packages/132amd64-default-server",
         signature_type: "pubkey",
         pubkey: "/usr/local/etc/ssl/certs/poudriere.cert",
         enabled: yes,
